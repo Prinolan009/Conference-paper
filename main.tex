@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[left=2cm, right=2cm, top=2cm]{geometry}
+\title{Symbiotic organisms search algorithm for the blood assignment problem}
+\author{Prinolan Govender\textsuperscript{1}, Absalom Ezugwu \textsuperscript{1*}}
+\date{\textsuperscript{1}School of Mathematics, Statistics, and Computer Science, University of Kwazulu-Natal, Private Bag Box X54001, Durban 4000, South Africa}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+  \textbf{Abstract}: The blood assignment problem is an important real world optimization problem because of the continuous demand for blood transfusion during medical emergencies. However, the formulation of this problem faces a lot of challenges that stretches from managing critical blood shortages, limited shelf life or blood expiration, to the natural blood grouping that tends to incorporate additional constraints on the type of blood to be transfused to a patient. In addition, difficulty can also arise from blood banks not being able to meet their daily demands and blood products requiring importation from external sources. These challenges have serious consequences especially in the case where the demand for blood is very high. There is therefore the need to minimize blood wastage with regards to expiration and importation, whilst maximising instances of availability for all blood types to patients need. To solve this problem, existing work used fixed percentage bounds to generate values for demand and supply. However, in this paper a different approach is used when generating such values, by allocating a unique percentage bound to each month. The bounds conform to statistics taken from South African social behaviour with the attempt of generating values which mimic real-life monthly demand and supply for whole blood units. In this paper, a modified symbiotic organisms search algorithm with robust blood banking assignment policy is employed to effectively minimize the operational costs of the blood transfusion centres. The computational results indicate that proposed algorithm performed quite satisfactory from computational time, stock-piling and low importation level points of view.
+  \\
+  \\
+\textit{Keywords: Blood assignment problem, blood product, blood group, blood compatibility, symbiotic organisms search algorithm, SOS.}
+
+\end{abstract}
+
+\section{Introduction}
+Human blood inventory management is characterized by a string of factors which can prove to be complicated over time [1]. Blood products are usually received from voluntary donors; these products are then stored under ideal conditions for usage in the future. Blood is comprised of 4 components namely red blood cells (RBC), white blood cells (WBC), and platelets (PLT) which is immersed in a matrix of plasma. These blood components can be harvested from a single donation and be used for different medical cases [2]. The following study focuses on whole blood (WB) units which relates to all components of blood. In accordance to the ABO blood system (system which classifies blood based on the properties of red blood cells) [3], there has four different blood groups namely A, B, AB and O. Each of these blood types has a Rhesus value (Rh) which can either be positive (+) or negative (-). The introduction of the Rh value doubles the number of blood groups humans resulting in humans leading to 8 different blood types. These blood groups are significant with regards to storage and distribution as mixing incompatible blood types can lead to blood clumping (also known as agglutination), which can be life threatening for patients [4]. \\
+\\
+The demand for WB units can be exemplified using the following two main scenarios. The first scenario involves a predetermined event such as a typical surgery which could be scheduled days before in the case of hospital admission. The scheduling process allows for sufficient WB units to be set aside (or imported if there is an insufficient amount available in the blood bank). The second scenario relates to the demand for WB units that cannot be foreseen or that was not initially planned for as in the case of medical emergencies such road accidents or natural disasters. This can further be demonstrated by an individual who is exposed to sudden onsets of trauma and is in need of immediate attention or WB unit’s transfusion. Blood preservation for onset supply in the case of unexpected demand can be a daunting task because blood product is considered a perishable commodity due to its limited shelf life [5, 6, 7, 8], coupled with the complexity of blood compatibility and the stochastic nature of daily blood demand and supply [9, 10, 11]. Therefore, it is necessary to devise more efficient and effective ways in which blood products can be stored and assigned to individuals in need. 
+\\
+\\
+The Blood assignment problem (BAP) is an optimization task, which tries to efficiently assign WB units to patients whilst trying to minimize the amount of importation and expiry within the blood bank. The BAP is said to be an NP-hard problem [12]. The BAP is comprised of a plethora of components which becomes difficult to mathematically model, such components involve dealing with inadequate supply to meet daily demand, importing additional units, cross-matching blood, and expiring WB units once a unit has exceeded its shelf-life. It must be remembered that blood products must be voluntarily donated to blood banks, therefore there is no constant levels of supply, whilst demand for WB units occurs every day. The BAP is therefore studied with the effort to develop an adequate model which utilize WB units more efficiently and achieve its objective function.
+Research relating to the BAP is relatively scarce and only a handful of related literature exists [5, 6, 7, 8, 9, 10, 11]. However, the few studies which were conducted under the BAP as optimization problem generally follow similar scope of applying existing metaheuristic algorithms to solve the problem at hand [ 3, 12, 13]. In this study, five different well-known nature inspired metaheuristic algorithms as well as a robust blood bank assignment policy are implemented to solve the BAP with the main goal of reducing cost and time of blood component distributions. In addition, the proposed blood assignment method generally seeks to minimize wastage of blood products by efficiently assigning blood to patient and preserving blood stock pile by allocating available blood to different blood types. A report conducted in Estonia, reviewed the various techniques and aspects of blood donations, and the costs associated with these methods [14]. This study ignores any specific costs related to blood storage and management, as by minimizing the objective function the blood bank would be deemed as optimal with regard to expenditure and usage of resources.
+The method implemented in this study tries to reduce the randomness when generating datasets. Studies conducted in [3, 12, 13] used fixed percentage bounds to generate values for demand and supply. However, in this paper a different approach was used when generating such values, by allocating a unique percentage bound to each month. The bounds conform to statistics taken from South African social behaviour with the attempt of generating values which mimic real-life monthly demand and supply for WB units. Therefore, to confront the problem at hand, this study implements a hybrid algorithm that combines a SOS algorithm and blood assignment policy to solve the BAP.
+\\
+\\
+In the last decade, a number of heuristic based algorithmic strategies were proposed in the quest for finding near-optimum solutions to the inventory blood assignment problem, among these algorithms include Hill climbing (HC) [37, 38], Simulated annealing (SA) [37, 38], Genetic algorithm (GA) [3, 36, 38], Tabu search (TS) [39], Particle swarm optimization (PSO) [12], Greedy Randomized Adaptive Search Procedure (GRASP) [13]. All the algorithms listed here draw their inspiration from nature, through the observation of physical processes that occur in nature. They are implemented by mimicking different natural systems and processes using mathematical models and algorithms. However, aside GA and PSO none of the aforementioned heuristics have proven track record of finding good near-optimum solution to complex real-world problems in the domain of combinatorial optimization.
+\\
+\\
+In this paper, the possibility of improving a recently proposed symbiotic organisms search (SOS) algorithm with an efficient blood assignment policy to solve the BAP is investigated. The symbiotic organisms search algorithm was first introduced in [31]. The algorithm is inspired by the symbiotic relationships strategies, which exist among organisms in the ecosystem. The SOS algorithm was initially proposed to solve continuous engineering optimization problems. Several experimental results from the literatures [40, 41, 42, 43, 44, 45, 46], which have used the SOS algorithm as an optimization method to find global optimum solutions, indicate that the algorithm shows a considerable robustness in its performance when tested on complex continuous mathematical benchmark functions and discrete combinatorial optimization problems. Therefore, the potential of SOS in finding global solution to the aforementioned optimization problem makes it attractive for further investigation. In addition, since the SOS has not gained wide recognition in solving inventory problems, such as, assignment problems, we believe that this could be our main motivation to introduce SOS to solve complex discrete problem such as the BAP.
+\\
+\\
+The remainder of this paper is organized as follows: Section 2 present a review of some of the existing literature on BAP. Section 3 presents the BAP problem description and formulation. Section 4 presents the proposed SOS algorithm and the new BAP assignment policy. Section 5 discusses the experimental configuration and computational results. Finally, concluding remarks and future directions are presented in Section 6.
+
+\section{Related Work}
+Studies conducted in the BAP topic have used different approaches and metaheuristics to try and optimize the assignment of blood. The transfusion of blood or blood related products is a daily activity which occurs in most hospitals and clinics around the world. The complexity associated with the understanding of blood compatibility and transfusion using any blood type, often result in blood clumping and other negative side effects upon the patient. Antigens A and B for blood types where discovered in 1927, later type O was established resulting in the widely known ABO blood group system [15]. Bas [16] analysed another aspect of the blood banking system which focused on the donating process of blood. The study looked into donors, collection and screening of acquired blood units as well as finding a way of supplying adequate blood units to transfusion centres. A unique implementation was conducted by [17], who developed a web-based application for managing the information of blood donors and blood stock. Charpin [18] introduced a linear model for the blood management problem, which incorporated a dynamic environment of blood products entering and exiting the system on a daily basis. The model also takes into account blood compatibility issues, and tries to find the best solution by attempting to match the supply of blood to it daily demand. Many factors contribute towards the assignment of blood to patients, some of which includes request time, urgency for the request, compatibility of blood types and the quantity of blood required [19]. The management of blood can therefore be considered as a very diverse topic with different areas of consideration. Table 1 represents the compatible blood types, while “YES” indicates that a blood type is compatible and “NO” implies that a blood type is not compatible.
+\begin {center}
+Table 1: {Representation of blood compatibility }
+\break
+\end {center}
+
+    
+\begin{center}
+\begin {tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+
+Blood types& $A^+$&$A^-$&$B^+$& $B^-$& $AB^+$& $AB^-$&  $O^+$& $O^-$ \\ [0.5ex]
+\hline
+ $A^+$&YES&YES&NO&NO&NO&NO&YES&YES\\
+ $A^-$&NO&YES&NO&NO&NO&NO&NO&YES\\
+ $B^+$&NO&NO&YES&YES&NO&NO&YES&YES\\
+$B^-$&NO&NO&NO&YES&NO&NO&NO&YES\\
+$AB^+$&YES&YES&YES&YES&YES&YES&YES&YES\\
+$AB^-$&NO&YES&NO&YES&NO&YES&NO&YES\\
+$O^+$&NO&NO&NO&NO&NO&NO&YES&YES\\
+$O^+$&NO&NO&NO&NO&NO&NO&NO&YES\\
+\hline
+
+\end {tabular}
+
+\end {center}
+The BAP has generated unique potential solutions which takes into account external factors that contribute towards the assignment of blood. As such similar research topics relating to blood inventory have been conducted. In Kaveh’s [20], study of the blood banking supply chain allocation problem was considered. In this existing work, Metaheuristic optimization technique and graph partitioning were used to minimize the total distance between blood bank(s) and hospitals. The computational experiment from [21] showed interesting results with regards to optimal points of view and computational time. Another study that dealt with blood bank assignment problem was the study conducted by Sahin [22], who implemented several mathematical models to solve the location-allocation decision problems for blood banking services. In [16], real-world benchmark datasets were used and the computational results showed that the proposed method was able to achieve successful results in resolving the management difficulties. Similarly, Sapountiz [23] incorporated probability distribution by considering characteristics such as the management of the hospital, rules and regulations within the blood bank, and organising blood according to doctor’s preference to address the same BAP.
+\\
+\\
+In recent years, studies conducted for the BAP by [3, 12, 13] followed the same assignment patters in terms of proposing optimization models for the blood assignment problem. The usage of a Multiple Knapsack model enabled cross-matching blood between compatible blood types, along with the bottom-up technique to pull additional units of blood from compatible blood types. In [3], the implementation of multiple adaptations of a GA approach which included Genetic Algorithm (GA), Adaptive Genetic Algorithm (AGA), Simulated Annealing Genetic Algorithm (SAGA), Adaptive Simulated Annealing Genetic Algorithm (ASAGA) as well as Hill Climbing (HC) Algorithm were considered. Results from the study showed that all the implementations successfully achieved optimal fitness, with HC performing the best. The study conducted in [6] implemented two local search methods namely GRASP and dynamic programming and generated supply for a day by adding the previous days’ remainder to the donations received in the day. The results showed that GRASP imports O+ and O- blood quite heavily within the first 50 days before eventually levelling out, whilst dynamic programming handles the event of demand exceeding supply more efficiently.
+\\
+\\
+The method implemented in this study tries to reduce the randomness when generating datasets. Studies conducted by [3, 12, 13] used fixed percentage bounds to generate values for demand and supply. However, the current study presented in this paper considered a different approach when generating such values, by allocating a unique percentage bound to each month. The bounds conform to statistics taken from South African social behaviour [26] with the attempt of generating values which mimic real-life monthly demand and supply for WB units. To confront the problem at hand, this paper implements a modified SOS global optimisation algorithm and a robust blood banking policy which tries to satisfy the main objective function of the BAP of minimising blood product wastage. What follows next, is the background representation of the study area.
+\subsection{The South African Population}
+South Africa is known for its variety of culture and race. Race refers to the ethnicity of an individual, there exists four common races in South Africa, Black African, White, Indian/Asian, and Coloured, with approximately 41 million citizens currently living in South Africa [24]. The Pie chart shown in Fig. 1 indicates the current percentage of races within the population.
+\\
+\\
+Figure 1 indicates that the current percentage of Black South African citizens is 80.6\%, Coloured is 8.7\%, White citizens is 8.2\% and finally the Indian population is 2.6\%. HIV and AIDS is a growing epidemic, with the virus attacking an individual’s immune system [25], there is currently no cure for this virus. In South Africa an estimated 7 million people are currently affected with HIV, with an annual death toll of around 180 000 people and an estimated 64\% of the infected individuals being of Black decent. Therefore, this further justifies the screening process of blood for any blood related diseases and pathogen before it reaches its recipient. Due to the variety of culture in South Africa, the country also experiences a number of different public holidays. These holidays are derived from a variety of events, some of which are issued to honour the past of South African history, whilst others are cultural based. In addition to public holidays, educational facilities such as schools and tertiary institutes take mid-term breaks. The importance of these dates relates to the social behaviour aspect that will be represented in the BAP model. In theory, individuals indulge in more dangerous activities during months with more breaks and public holidays, therefore leading to an increase in demand of blood and blood products.
+\begin {center}
+Table 2: {Illustrates the proportion of blood types found in the South African Population adapted from [12] }
+
+\end {center}
+\begin{center}
+\begin {tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+
+Blood types& $A^+$&$A^-$&$B^+$& $B^-$& $AB^+$& $AB^-$&  $O^+$& $O^-$ \\ [0.5ex]
+\hline
+
+ $Proportion(\%)$&32&5&12&2&3&1&39&6\\
+ 
+\hline
+
+\end {tabular}
+
+\end {center}
+\subsection{Problem Description}
+The demand for blood in a day must be met. If the demand exceeds the current supply at hand, then the blood bank must then import additional units from external sources in order to fulfil the requests. Each day the blood bank receives WB units in the form of voluntary blood donations. The new supply of blood is then added to the existing supply (any units remaining from the previous day) of blood at hand, the new blood units enter a queuing system with the newer units being placed at the end of the queue. The purpose of the queuing technique allows for the oldest WB units to be used first which in turn minimises possible expiration of blood units. The total supply at the start of the day equates to the sum of the remainder from the previous day plus the total amount of donations received at the start of the current day, any donations received during the day will be stored and used for the next day (this amount ties in with the remainder value). Any units that exceed their shelf life are discarded from the blood bank. Typically, a patient should receive their own blood type during transfusion, however if there is an inadequate supply of that specific blood type, this would then result in using compatible blood types. Before blood is pulled from other compatible blood groups, each blood type must fulfil all their blood type requests for the day, if there are any remaining units after fulfilling such requests only then can it be distributed to other blood compatible groups. Overall the BAP can be summarized into 4 major components
+\begin{itemize}
+\item Supply: Relates to the current stock of WB units on hand at any given moment.
+\item Demand: Relates to both planned and unplanned requests for WB units.
+\item Importation: Additional WB units are imported when demand exceeds supply for a day
+\item Expiring: WB units that have exceeded their shelf life are destroyed.
+
+\end{itemize}
+Due to the plethora of external factors which encumber the BAP, certain assumptions had to be introduced in order to formulate the required mathematical model that would be adequate for the problem at hand. These assumptions are as follows:
+
+\begin{itemize}
+\item The blood bank has an infinite supply of capital, and storage space. The external sources (for importing WB units) also have a limitless supply.
+\item The time frame will be conducted over 365 days, with day 1 receiving no carryover of WB units from the previous day.
+\item Validity of blood will be set at 30 days, used in the study conducted by [12].
+\item All blood types will first fulfil requests associated with their blood types, from there the remainder from each blood group can contribute to other compatible blood types.
+
+\end{itemize}
+In Fig. 2, the flow diagram represents the daily process that occurs within the blood bank as modelled in this study, with each block representing the various potential activities that can be expected in the BAP. 
+\\
+\\
+As mentioned previously, the demand and supply for WB units follows a stochastic trend. In an ideal day, the supply for each blood type would meet the exact demand level which in turn eliminates importation from additional units, as well as carrying over excess stock which opens the supply to possible expiry. Therefore, the SOS algorithm is implemented using randomly generated demand and supply datasets that are based on the South African social trends, with the objective of finding the best possible solution for the day. There are four aspects which are combined to offer efficient solution to the BAP, and consequently provide optimal WB unit assignment schedule in relation to demand. The four components include the global optimisation implementations, the blood compatibility process, expiry of old WB units, and importation of additional WB units when demand exceeds supply for a day. 
+\section{Model Formulation}
+The blood bank model in this section tries to minimize the combination of both importation and expiration of a finite time period. In addition, the BAP implements mathematical techniques for generating demand and supply which pertains to each blood type. By minimizing the objective function, the blood bank will incur lower expenses and utilise blood units more efficiently.
+
+\subsection{Demand and supply generation}
+Due to confidentiality issues, it was not possible to use datasets from hospitals/clinics in this study. In order to test each implementation, values for both demand and supply had to be randomly generated. In order to generate more accurate values, this study incorporated South African social trends based from monthly statistics. Ideally the most adequate statistics would be related to monthly usage of blood products in the country, however these statistics could not be found. Instead this study will incorporate monthly holidays as well as school terms and breaks from other educational institutions. The ideology behind this method tries to show that the demand for blood has trends associated with a specific month, for example demand would be expected to have a higher value in a month like December due to many people being off from work, school and other institutions, as well as the rise of dangerous events such as drinking and driving and criminal activities. Reports have shown that South Africa experience an increase in the amount of drunk driving levels during Easter [26], therefore blood banks tend to stock-pile blood products for precautionary measures. Taking this and other social trends into account, it is possible to allocate each month with a specified percentage range for generating a value for demand. There were no significant events apart from occasional blood drives for generating values for supply, therefore the supply bounds will be set between 25-75\%. 
+\begin {center}
+Table 3: {Represents the starting month and ending month of most educational institutions in South Africa [20].}
+
+\end {center}
+\begin{center}
+\begin {tabular}{|c|c|c|}
+\hline
+
+Education institutions terms& Start Month&End Month \\ [0.5ex]
+\hline
+
+ $1$&January&March\\
+  $2$&April&June\\
+   $3$&July&September\\
+    $4$&October&December\\
+\hline
+
+\end {tabular}
+
+\end {center}
+
+\begin {center}
+Table 4: {Represents the starting month and ending month of most educational institutions in South Africa [20].}
+
+\end {center}
+\begin{center}
+\begin {tabular}{|c|c|}
+\hline
+
+Date& Percentage bounds \\ [0.5ex]
+\hline
+
+ $1 January$&New year’s day\\
+  $21 March$&Human Rights day\\
+   $14 April$&Good Friday\\
+    $17 April$&Family day\\
+     $27 April$&Freedom day\\
+      $1 May$&Workers day\\
+       $16 June$&Youth day\\
+        $9 August$&Woman’s day\\
+         $24 September$&Heritage day\\
+          $16 December$&Day of recognition\\
+            $25 December$&Christmas day\\
+              $26 December$&Boxing day\\
+\hline
+
+\end {tabular}
+
+\end {center}
+Using tables 3 and 4 from above, it is now possible to link each month with a unique percentage bound
+
+
+
+\end{document}
