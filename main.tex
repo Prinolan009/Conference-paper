@@ -149,7 +149,7 @@ Table 4: {Represents the starting month and ending month of most educational ins
 \begin {tabular}{|c|c|}
 \hline
 
-Date& Percentage bounds \\ [0.5ex]
+Date& Public Holiday \\ [0.5ex]
 \hline
 
  $1 January$&New year’s day\\
@@ -172,5 +172,84 @@ Date& Percentage bounds \\ [0.5ex]
 Using tables 3 and 4 from above, it is now possible to link each month with a unique percentage bound
 
 
+\begin {center}
+Table 5:  {Illustrates the percentage bounded ranges used for generating demand.}
 
+\end {center}
+\begin{center}
+\begin {tabular}{|c|c|}
+\hline
+
+Month&Percentage bounds  \\ [0.5ex]
+\hline
+
+ $January$&35-85\\
+  $February&25-50\\
+   $March&25-75\\
+    $April$&65-90\\
+     $May&25-75\\
+      $June&35-85\\
+       $July&65-90\\
+        $August$&25-75\\
+         $September$&10-50\\
+          $October&25-75\\
+            $November&25-75\\
+              $December&65-90\\
+\hline
+
+\end {tabular}
+
+\end {center}
+Using the percentage bounds in table 5, it is now possible to generate demand, as well as supply using eq 2.
+
+\section{Parameter setting and Datasets}
+The following parameter configurations were used for the implementation of the SOS and four other metaheuristic algorithms that were developed to compare and validate the performances of the proposed SOS algorithm. These algorithms include GA, PSO, duellist algorithm (DA) [30], and grey wolf optimizer (GWO) [33]. Each of the algorithms were implemented on Intel core i5 CPU with 2.5GHz and 4GB RAM and the Operating system is Windows 10.0, while the implementation software is Java.
+\\
+\\
+•	GA: Iterations=1000, Population size= 50, Mutation rate= 30\%, Crossover rate=20\%, Regeneration rate= 50\%\\
+•	PSO: Iterations=1000, Swarm Size=50, c1 = c2= 1.7, ω= 0.715.\\
+•	DA: Iterations= 1000, Tournament size=50.\\
+•	SOS: Iterations=1000, Organisms size=50.\\
+•	GWO: Iterations=1000, Pack size=50.\\
+
+As aforementioned in section 3 above, the study conducted on the blood assignment problem uses stochastically generated datasets since real-world datasets were not available for use. It is noteworthy to mention here that the dataset used for the implementation of all the five metaheuristics follow similar trends as to what is obtainable in the related literatures which have solved the same BAP problem [1, 2, 3]. In addition, the datasets use percentage bounds in order to randomly select a value. The bounds however were adapted from the studies conducted in [1, 2, 3] who all used the similar percentage ranges for their randomly generated datasets. It is equally important to mention that our study tries to reduce randomness when stochastically generating values for datasets, and to the best of our knowledge this approach has not be employed on this problem before. More so, the new method proposed in this paper also did explore other novel method with regards to data generation that incorporated an aspect of South African statistics and percentage bound creation, as discussed in section 3.2 above. To easily replicate the experiments described in this paper, all the raw datasets are provided as supporting documents.
+\\
+\\
+As mentioned previously, datasets were generated stochastically as real-world datasets could not be attained. As such, previous work done by [3, 12, 13] constructed datasets using ranged percentage bounds and subsequently randomly selected a percentage between the bounds. This study also adopted the same principals and used a random number generator (RNG) in order to generate the datasets. The datasets were run over a course of 1 year (365 days) and generated values for supply and demand of WB units. The blood bank can also experience certain situations which the blood bank must deal with, for example the demand for WB units could exceed the supply or vice versa. Below is a table illustrating the demand ranges followed per dataset. The following table lists the different datasets used for testing each metaheuristic algorithm. Note that SAGV represents South African Generated Values.
+
+\begin {center}
+Table 7: {Representation of the datasets 1-6 used in this study of the BAP}
+
+\end {center}
+\begin{center}
+\begin {tabular}{|c|c|c|c|}
+\hline
+
+Datasets& Initial Blood Volume&Demand bounds (\%)&Supply bounds (\%) \\ [0.5ex]
+\hline
+
+ $1$&500&25-75&25-75\\
+  $2$&500&SAGV&25-75\\
+   $3$&500&75-100&25-50\\
+    $4$&500&25-50&75-100\\
+     $5$&5000&25-75&25-75\\
+      $6$&5000&SAGV&25-75\\
+\hline
+
+\end {tabular}
+
+\end {center}
+In accordance to table 7 the following offers a more detailed explanation relating to each dataset, and the purpose for using those specific percentage bounds.\\
+\\
+i.	\textbf{Dataset 1}: Dataset 1 was regarded as the control dataset which was used as a comparison to other datasets. Previous literatures pertaining to the BAP used similar percentage ranges and initial blood volume, therefore it seemed appropriate to evaluate the metaheuristic algorithms with these amounts.\\
+ii.	\textbf{Dataset 2}: Apart from the different metaheuristic algorithms that were implemented to work the BAP, this studied also incorporated a unique method for generating demand based on South African statistics (section 2.4). Dataset 2 represented this ideology and tries to minimize the stochastic nature when randomly generating values for WB unit demand. The SAGV illustrated in table 5 correlate to percentage bounds mentioned in table 7. \\
+iii.\textbf{Dataset 3}: The blood bank can face a situation where the demand for WB units heavily exceeds the current supply on hand. Dataset 3 tests this scenario, and it was expected for the importation levels to increase radically in order to satisfy the demand. More importation results in a greater expense being incurred by the blood bank, therefore dataset 3 tested how well an algorithm coped with a higher demand level.\\
+iv.	\textbf{Dataset 4}: Dataset 4 tests the opposite of dataset 3. In this scenario the blood bank faces an excess supply of WB units with minimal demand. It would be expected for the expiry levels to increase as the more stock of WB units will remain on the shelf and not be used within its lifespan. This also incurs additional expenses by the blood bank and implies that the blood bank is not utilising its WB stock efficiently.\\
+v.	\textbf{Dataset 5 and 6}: Dataset 5 and 6 are a replica of dataset 1 and 2 respectively. However, they differ by means of initial WB volume being 5000 units instead of 500 units. This dataset examines how well the metaheuristic algorithm copes with larger volumes of WB units. \\
+
+\section{Results and Discussion}
+This section presents the numerical result of the proposed SOS for the six different datasets used to conduct the experiment. Furthermore, to validate the performance of the modified algorithm against existing state-of-the-art algorithms, four other population based metaheuristic algorithms were also implemented and each improved with the same blood assignment policy as it was the case with the SOS. Therefore, two sets of experiment were conducted and reported respectively.
+
+\subsection{Experiment 1: Simulation results for the symbiotic organisms search algorithm}
+In Table 8, the average computational results achieved by the SOS implementation for the BAP in accordance to each dataset described in section 3.9 above is presented. The significant components used to analyse the performance of the improved SOS algorithm are the two variables which create the objective function, namely the expiration and importation of WB units. The following section provides the average results obtained per dataset as well as line graphs achieved for a visual representation of what occurs within the time period. A solution is found if the supply for the day matches the daily demand. However, due to the way in which supply for a day is generated such that the previous days’ remainder is added to the newer influx of donations, stock-piling can occur. Figs. 5 to 10 also gives an indication as to when the stock-piling event occurs. It is important mention that the quicker this happens, the fewer would be the importation of the WB unit. Fig 3 to 8, represent line graphs attained over a 365-day period for each dataset used to test the improved implementation of the SOS algorithm that was combined with the blood bank assignment policy. Fig 11, represents a line graph which compares the demand values generated using the 25-75\% percentage range and the percentage ranged that was created using the SAGV.
 \end{document}
